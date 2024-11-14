@@ -1,0 +1,30 @@
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+from mlxtend.preprocessing import TransactionEncoder
+ 
+
+data = pd.read_csv('Order1.csv')
+
+
+data.head()
+
+
+transacttions = data.groupby('Member_number')['itemDescription'].apply(list).values.tolist()
+
+
+te = TransactionEncoder()
+
+
+tran = te.fit_transform(transacttions)
+tran
+
+df = pd.DataFrame(tran, columns = te.columns_)
+
+frequent_itemsets = apriori(df, min_support = 0.05, use_colnames = True)
+
+
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.30, num_itemsets=None)
+rules
+
+
+

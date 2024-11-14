@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// Structure to represent an item with weight and profit
+struct Item 
+{
+    int weight;
+    int profit;
+    double profitPerWeight; // Profit-to-weight ratio
+};
+
+// Comparison function to sort items by profit per weight in descending order
+bool compare(Item a, Item b) 
+{
+    return a.profitPerWeight > b.profitPerWeight;
+}
+
+// Function to calculate maximum profit for the fractional knapsack problem
+double fractionalKnapsack(int W, vector<Item>& items) 
+{
+    // Sort items based on profit per weight ratio in descending order
+    sort(items.begin(), items.end(), compare);
+
+    double maxProfit = 0.0;
+    for (auto& item : items) 
+    {
+        // If item fits entirely in knapsack, take it all
+        if (W >= item.weight) 
+        {
+            maxProfit += item.profit;
+            W -= item.weight;
+        }
+        // Otherwise, take the fraction that fits
+        else 
+        {
+            maxProfit += item.profitPerWeight * W;
+            break;
+        }
+    }
+    return maxProfit;
+}
+
+int main() 
+{
+    int W, n;
+    
+    // Take user input for knapsack capacity
+    cout << "Enter the capacity of the knapsack: ";
+    cin >> W;
+    
+    // Take user input for number of items
+    cout << "Enter the number of items: ";
+    cin >> n;
+
+    vector<Item> items(n);
+    
+    // Take user input for each item's weight and profit
+    for (int i = 0; i < n; i++) 
+    {
+        cout << "Enter weight and profit for item " << i + 1 << ": ";
+        cin >> items[i].weight >> items[i].profit;
+        
+        // Calculate profit per weight for each item
+        items[i].profitPerWeight = (double)items[i].profit / items[i].weight;
+    }
+
+    // Calculate maximum profit using the fractional knapsack algorithm
+    double maxProfit = fractionalKnapsack(W, items);
+    cout << "Maximum Profit: " << maxProfit << endl;
+
+    return 0;
+}

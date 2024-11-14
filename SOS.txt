@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to find subsets with the given target sum
+void subsetSum(vector<int> &arr, vector<int> &subset, int index, int sum, int target)
+{
+    // If the current sum is equal to the target, print the subset
+    if (sum == target)
+    {
+        cout << "{ ";
+        for (int it : subset)
+        {
+            cout << it << " ";
+        }
+        cout << "}" << endl;
+        return;
+    }
+
+    // If index is out of bounds or sum exceeds the target, return
+    if (index == arr.size() || sum > target)
+    {
+        return;
+    }
+
+    // Include the current element in the subset and recursively find further subsets
+    subset.push_back(arr[index]);
+    subsetSum(arr, subset, index + 1, sum + arr[index], target);
+
+    // Exclude the current element from the subset and backtrack
+    subset.pop_back();
+    subsetSum(arr, subset, index + 1, sum, target);
+}
+
+int main()
+{
+    int n;
+    cout << "Enter the number of elements: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    cout << "Enter the elements: ";
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+    }
+
+    int target;
+    cout << "Enter the target sum: ";
+    cin >> target;
+
+    vector<int> subset;
+    cout << "Subsets with sum " << target << " are:\n";
+    subsetSum(arr, subset, 0, 0, target);
+
+    return 0;
+}
+

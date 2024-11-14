@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int knapsack(int M, vector<int>& weights, vector<int>& profits, int n) {
+    // DP table where dp[i][j] represents max profit for i items and capacity j
+    vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
+    
+    // Build the DP table
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= M; ++j) {
+            if (weights[i - 1] <= j) {
+                // Include the item or exclude it, and take the maximum
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weights[i - 1]] + profits[i - 1]);
+            } else {
+                // Exclude the item if it doesn't fit
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+    
+    // Maximum profit will be in the bottom-right corner
+    return dp[n][M];
+}
+
+int main() {
+    int M, n;
+
+    // Take user input for knapsack capacity
+    cout << "Enter the capacity of the knapsack: ";
+    cin >> M;
+
+    // Take user input for number of items
+    cout << "Enter the number of items: ";
+    cin >> n;
+
+    vector<int> weights(n), profits(n);
+
+    // Take user input for each item's weight and profit
+    for (int i = 0; i < n; i++) {
+        cout << "Enter weight and profit for item " << i + 1 << ": ";
+        cin >> weights[i] >> profits[i];
+    }
+
+    // Calculate maximum profit using the knapsack algorithm
+    int maxProfit = knapsack(M, weights, profits, n);
+    cout << "Maximum Profit: " << maxProfit << endl;
+
+    return 0;
+}
